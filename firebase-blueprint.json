@@ -1,0 +1,137 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user profile, preferences, and saved avatar image.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 160
+        },
+        "roleTitle": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "bio": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "avatarUrl": {
+          "type": "string",
+          "maxLength": 200000
+        },
+        "preferredFramework": {
+          "type": "string",
+          "enum": ["langgraph", "crewai"]
+        },
+        "preferredProvider": {
+          "type": "string",
+          "enum": ["google", "groq"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "displayName", "email", "preferredFramework", "preferredProvider", "createdAt", "updatedAt"]
+    },
+    "WorkflowRun": {
+      "title": "WorkflowRun",
+      "description": "Persistent multi-agent research workflow state, cyclic revisions, and human-in-the-loop approval record.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "ownerId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "maxLength": 128
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "topic": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "framework": {
+          "type": "string",
+          "enum": ["langgraph", "crewai"]
+        },
+        "provider": {
+          "type": "string",
+          "enum": ["google", "groq"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["idle", "running", "awaiting_approval", "completed", "error"]
+        },
+        "cycleCount": {
+          "type": "integer"
+        },
+        "maxCycles": {
+          "type": "integer"
+        },
+        "researchNotes": {
+          "type": "string",
+          "maxLength": 40000
+        },
+        "draftMarkdown": {
+          "type": "string",
+          "maxLength": 80000
+        },
+        "humanFeedback": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "sources": {
+          "type": "array"
+        },
+        "steps": {
+          "type": "array"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "ownerId", "title", "topic", "framework", "provider", "status", "cycleCount", "maxCycles", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user profile and preferences owned strictly by userId."
+    },
+    "/workflows/{workflowId}": {
+      "schema": { "$ref": "#/entities/WorkflowRun" },
+      "description": "Saved multi-agent workflow runs owned by ownerId."
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "AgentFlow Studio",
+  "description": "Multi-agent autonomous research workbench featuring cyclic LangGraph and CrewAI workflows, DuckDuckGo search, human-in-the-loop approval gates, saved profiles, and Python code export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

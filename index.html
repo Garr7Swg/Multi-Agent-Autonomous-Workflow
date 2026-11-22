@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgentFlow Studio — Multi-Agent Autonomous Workflow Workbench</title>
+    <meta name="description" content="Multi-agent autonomous research workbench featuring cyclic LangGraph and CrewAI workflows, DuckDuckGo search, human-in-the-loop approval gates, saved profiles, and Python code export." />
+    <meta property="og:title" content="AgentFlow Studio" />
+    <meta property="og:description" content="Multi-agent autonomous research workbench featuring cyclic LangGraph and CrewAI workflows, DuckDuckGo search, human-in-the-loop approval gates, saved profiles, and Python code export." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script>
+      try {
+        if (localStorage.getItem('agentflow_theme') === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    </script>
+    <style>
+      #boot-loader {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 16px;
+        background: #f8fafc;
+        color: #0f172a;
+        font-family: "Public Sans", system-ui, -apple-system, sans-serif;
+        box-sizing: border-box;
+      }
+      html.dark #boot-loader {
+        background: #020617;
+        color: #f1f5f9;
+      }
+      .af-boot-card {
+        width: 100%;
+        max-width: 512px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+        box-sizing: border-box;
+      }
+      html.dark .af-boot-card {
+        background: #0f172a;
+        border-color: #1e293b;
+      }
+      .af-boot-head {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+      .af-boot-spinner-wrap {
+        position: relative;
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .af-boot-svg {
+        width: 64px;
+        height: 64px;
+        animation: af-spin 2.2s linear infinite;
+      }
+      .af-boot-dot {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border-radius: 9999px;
+        background: #0f766e;
+        animation: af-pulse 1.6s ease-in-out infinite;
+      }
+      html.dark .af-boot-dot {
+        background: #2dd4bf;
+      }
+      .af-boot-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      }
+      .af-boot-sub {
+        margin: 4px 0 0;
+        font-size: 12px;
+        font-weight: 500;
+        color: #64748b;
+      }
+      html.dark .af-boot-sub {
+        color: #94a3b8;
+      }
+      .af-boot-bar-track {
+        width: 100%;
+        height: 6px;
+        border-radius: 9999px;
+        background: #f1f5f9;
+        overflow: hidden;
+      }
+      html.dark .af-boot-bar-track {
+        background: #1e293b;
+      }
+      .af-boot-bar-fill {
+        width: 40%;
+        height: 100%;
+        border-radius: 9999px;
+        background: #0f766e;
+        animation: af-slide 1.4s ease-in-out infinite;
+      }
+      html.dark .af-boot-bar-fill {
+        background: #2dd4bf;
+      }
+      .af-boot-notice {
+        border: 2px solid #fcd34d;
+        background: rgba(255, 251, 235, 0.9);
+        border-radius: 12px;
+        padding: 16px;
+        color: #78350f;
+      }
+      html.dark .af-boot-notice {
+        border-color: rgba(180, 83, 9, 0.8);
+        background: rgba(69, 26, 3, 0.4);
+        color: #fde68a;
+      }
+      .af-boot-notice-title {
+        margin: 0 0 4px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #451a03;
+      }
+      html.dark .af-boot-notice-title {
+        color: #fef3c7;
+      }
+      .af-boot-notice-text {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      @keyframes af-spin {
+        to { transform: rotate(360deg); }
+      }
+      @keyframes af-pulse {
+        0%, 100% { transform: scale(0.9); opacity: 0.75; }
+        50% { transform: scale(1.12); opacity: 1; }
+      }
+      @keyframes af-slide {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(260%); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .af-boot-svg, .af-boot-dot, .af-boot-bar-fill {
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-teal-100 selection:text-teal-900 dark:selection:bg-teal-900 dark:selection:text-teal-100">
+    <div id="root">
+      <div id="boot-loader" role="status" aria-live="polite" aria-label="Loading AgentFlow Studio">
+        <div class="af-boot-card">
+          <div class="af-boot-head">
+            <div class="af-boot-spinner-wrap" aria-hidden="true">
+              <svg viewBox="0 0 64 64" class="af-boot-svg">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(148,163,184,0.3)" stroke-width="3" />
+                <circle cx="32" cy="32" r="26" fill="none" stroke="#0d9488" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="56 112" />
+                <circle cx="32" cy="6" r="3.5" fill="#0d9488" />
+              </svg>
+              <span class="af-boot-dot"></span>
+            </div>
+            <div>
+              <h1 class="af-boot-title">AgentFlow Studio</h1>
+              <p class="af-boot-sub">Loading multi-agent workbench…</p>
+            </div>
+            <div class="af-boot-bar-track">
+              <div class="af-boot-bar-fill"></div>
+            </div>
+          </div>
+          <div class="af-boot-notice" role="note">
+            <h2 class="af-boot-notice-title">Notice: Running on Free-Tier Hardware &amp; Public APIs</h2>
+            <p class="af-boot-notice-text">Loading the app and running autonomous multi-agent workflows may take extra time because it runs exclusively on free-tier hardware and free public APIs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
